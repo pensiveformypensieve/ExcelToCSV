@@ -19,7 +19,7 @@ public class ExcelToCSV {
 
     final Logger log = Logger.getLogger(ExcelToCSV.class.getName());
 
-    public void readExcel(String inputFilePath, String outFilePath) throws Exception {
+    public Boolean readExcel(String inputFilePath, String outFilePath) throws Exception {
 
 //        String extType = StringUtils.substringAfterLast(inputFilePath,".");
         String extType = FilenameUtils.getExtension(inputFilePath);
@@ -30,57 +30,52 @@ public class ExcelToCSV {
         //required to print xls, xlsx to csv
         DataFormatter formatter = new DataFormatter();
         //print to csv
-        PrintStream out = new PrintStream(new FileOutputStream(outFilePath),true, "UTF-8");
+        PrintStream out = new PrintStream(new FileOutputStream(outFilePath), true, "UTF-8");
 
-        if(!extType.equals("xls") && !extType.equals("xlsx") && !extType.equals("csv")){
+        try{
+
+            if (!extType.equals("xls") && !extType.equals("xlsx") && !extType.equals("csv")) {
             throw new Exception("Invalid data type");
-        }
-
-        //xls format
-        if("xls".equals(extType)) {
-            try {
-            HSSFWorkbook wb = new HSSFWorkbook(fis);
-            HSSFSheet sheet = wb.getSheetAt(0);
-            FormulaEvaluator formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator();
-            for (Row row : sheet) {
-                //to skip headers
-                if(row.getRowNum()==0 || row.getRowNum()==1 || row.getRowNum()==2){
-                    continue;
-                }
-                for (Cell cell : row) {
-                    switch (formulaEvaluator.evaluateInCell(cell).getCellType()) {
-                        case NUMERIC:
-//                            System.out.print(cell.getNumericCellValue() + "\t\t");
-                            out.print(formatter.formatCellValue(cell));
-                            break;
-                        case STRING:
-//                            System.out.print(cell.getStringCellValue() + "\t\t");
-                            out.print(formatter.formatCellValue(cell));
-                            break;
-                    }
-                    out.print(",");
-                }
-                out.println();
             }
 
-        } catch (Exception e) {
-            log.debug("Error in data");
-            e.printStackTrace();
-            e.getMessage();
-        }
-    }
+            //xls format
+            if ("xls".equals(extType)) {
+                HSSFWorkbook wb = new HSSFWorkbook(fis);
+                HSSFSheet sheet = wb.getSheetAt(0);
+                FormulaEvaluator formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator();
+                for (Row row : sheet) {
+                    //to skip headers
+                    if (row.getRowNum() == 0 || row.getRowNum() == 1 || row.getRowNum() == 2) {
+                        continue;
+                    }
+                    for (Cell cell : row) {
+                        switch (formulaEvaluator.evaluateInCell(cell).getCellType()) {
+                            case NUMERIC:
+//                            System.out.print(cell.getNumericCellValue() + "\t\t");
+                                out.print(formatter.formatCellValue(cell));
+                                break;
+                            case STRING:
+//                            System.out.print(cell.getStringCellValue() + "\t\t");
+                                out.print(formatter.formatCellValue(cell));
+                                break;
+                        }
+                        out.print(",");
+                    }
+                    out.println();
+                }
 
-        //xlsx format
-        if("xlsx".equals(extType)) {
-            try {
+            }
+
+            //xlsx format
+            if ("xlsx".equals(extType)) {
                 XSSFWorkbook wbx = new XSSFWorkbook(fis);
                 XSSFSheet sheetx = wbx.getSheetAt(0);
                 Iterator<Row> rowIterator = sheetx.iterator();
                 while (rowIterator.hasNext()) {
                     Row row = rowIterator.next();
                     //to skip headers
-                    if(row.getRowNum()==0 || row.getRowNum()==1 || row.getRowNum()==2 || row.getRowNum()==3
-                            || row.getRowNum()==4 || row.getRowNum()==5 || row.getRowNum()==6 || row.getRowNum()==7){
+                    if (row.getRowNum() == 0 || row.getRowNum() == 1 || row.getRowNum() == 2 || row.getRowNum() == 3
+                            || row.getRowNum() == 4 || row.getRowNum() == 5 || row.getRowNum() == 6 || row.getRowNum() == 7) {
                         continue;
                     }
                     Iterator<Cell> cellIterator = row.cellIterator();
@@ -106,17 +101,10 @@ public class ExcelToCSV {
                     }
                     out.println();
                 }
-            } catch (Exception e) {
-                log.debug("Error in data");
-                e.printStackTrace();
-                e.getMessage();
-
             }
-        }
 
-        //csv format
-        if("csv".equals(extType)) {
-            try {
+            //csv format
+             if ("csv".equals(extType)) {
                 Scanner sc = new Scanner(new File(inputFilePath));
                 sc.useDelimiter(",");
                 //to skip headers
@@ -126,11 +114,19 @@ public class ExcelToCSV {
                     out.print(',');
                 }
                 sc.close();
-            } catch (Exception e) {
-                log.debug("Error in data");
-                e.printStackTrace();
-                e.getMessage();
             }
-        }
+
+
+
+
+
+        } catch (Exception e) {
+            log.debug("Error in data");
+            e.printStackTrace();
+            e.getMessage();
+            return false;
+            }
+
+        return true;
     }
 }
