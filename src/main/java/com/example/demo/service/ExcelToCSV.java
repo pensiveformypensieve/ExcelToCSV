@@ -45,7 +45,7 @@ public class ExcelToCSV {
                 FormulaEvaluator formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator();
                 for (Row row : sheet) {
                     //to skip headers
-                    if (row.getRowNum() == 0 || row.getRowNum() == 1 || row.getRowNum() == 2) {
+                    if (row.getRowNum()<2) {
                         continue;
                     }
                     for (Cell cell : row) {
@@ -70,17 +70,21 @@ public class ExcelToCSV {
             if ("xlsx".equals(extType)) {
                 XSSFWorkbook wbx = new XSSFWorkbook(fis);
                 XSSFSheet sheetx = wbx.getSheetAt(0);
-                Iterator<Row> rowIterator = sheetx.iterator();
-                while (rowIterator.hasNext()) {
-                    Row row = rowIterator.next();
+//                Iterator<Row> rowIterator = sheetx.iterator();
+//                while (rowIterator.hasNext()) {
+//                    Row row = rowIterator.next();
+                for(Row row : sheetx){
                     //to skip headers
-                    if (row.getRowNum() == 0 || row.getRowNum() == 1 || row.getRowNum() == 2 || row.getRowNum() == 3
-                            || row.getRowNum() == 4 || row.getRowNum() == 5 || row.getRowNum() == 6 || row.getRowNum() == 7) {
+                    if (row.getRowNum()<7) {
                         continue;
                     }
-                    Iterator<Cell> cellIterator = row.cellIterator();
-                    while (cellIterator.hasNext()) {
-                        Cell cell = cellIterator.next();
+                    for(int cn=0; cn<row.getLastCellNum(); cn++){
+//                    Iterator<Cell> cellIterator = row.cellIterator();
+//                    while (cellIterator.hasNext()) {
+//                        Cell cell = cellIterator.next();
+
+                        //to enable blank cells to be printed in switch case
+                        Cell cell = row.getCell(cn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
                         switch (cell.getCellType()) {
                             case STRING:
 //                                System.out.print(cell.getStringCellValue() + "\t\t\t");
@@ -97,9 +101,12 @@ public class ExcelToCSV {
                             default:
                                 out.print(formatter.formatCellValue(cell));
                         }
-                        out.print(",");
+//                    }
+//                    }
+                    out.print(",");
                     }
-                    out.println();
+
+                out.println();
                 }
             }
 
@@ -115,10 +122,6 @@ public class ExcelToCSV {
                 }
                 sc.close();
             }
-
-
-
-
 
         } catch (Exception e) {
             log.debug("Error in data");
