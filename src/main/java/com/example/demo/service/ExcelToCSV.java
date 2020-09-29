@@ -19,7 +19,7 @@ public class ExcelToCSV {
 
     final Logger log = Logger.getLogger(ExcelToCSV.class.getName());
 
-    public void readExcel(String inputFilePath, String outFilePath) throws IOException {
+    public void readExcel(String inputFilePath, String outFilePath) throws Exception {
 
 //        String extType = StringUtils.substringAfterLast(inputFilePath,".");
         String extType = FilenameUtils.getExtension(inputFilePath);
@@ -31,6 +31,10 @@ public class ExcelToCSV {
         DataFormatter formatter = new DataFormatter();
         //print to csv
         PrintStream out = new PrintStream(new FileOutputStream(outFilePath),true, "UTF-8");
+
+        if(!extType.equals("xls") && !extType.equals("xlsx") && !extType.equals("csv")){
+            throw new Exception("Invalid data type");
+        }
 
         //xls format
         if("xls".equals(extType)) {
@@ -58,8 +62,11 @@ public class ExcelToCSV {
                 }
                 out.println();
             }
+
         } catch (Exception e) {
+            log.debug("Error in data");
             e.printStackTrace();
+            e.getMessage();
         }
     }
 
@@ -88,16 +95,22 @@ public class ExcelToCSV {
 //                                System.out.print(cell.getNumericCellValue() + "\t\t\t");
                                 out.print(formatter.formatCellValue(cell));
                                 break;
+                            case BLANK:
+//                                System.out.print(cell.getNumericCellValue() + "\t\t\t");
+                                out.print(formatter.formatCellValue(cell));
+                                break;
                             default:
-                                log.debug("Error in data");
+                                out.print(formatter.formatCellValue(cell));
                         }
                         out.print(",");
                     }
                     out.println();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
                 log.debug("Error in data");
+                e.printStackTrace();
+                e.getMessage();
+
             }
         }
 
@@ -114,8 +127,9 @@ public class ExcelToCSV {
                 }
                 sc.close();
             } catch (Exception e) {
-                e.printStackTrace();
                 log.debug("Error in data");
+                e.printStackTrace();
+                e.getMessage();
             }
         }
     }
