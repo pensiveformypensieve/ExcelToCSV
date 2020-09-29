@@ -1,12 +1,7 @@
 package com.example.demo.service;
 
-import java.io.*;
-import java.util.Iterator;
-import java.util.Scanner;
-
-import org.apache.commons.lang3.StringUtils;
-
-import org.apache.log4j.*;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -16,13 +11,18 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.*;
+import java.util.Iterator;
+import java.util.Scanner;
+
 public class ExcelToCSV {
 
     final Logger log = Logger.getLogger(ExcelToCSV.class.getName());
 
     public void readExcel(String inputFilePath, String outFilePath) throws IOException {
 
-        String extType = StringUtils.substringAfterLast(inputFilePath,".");
+//        String extType = StringUtils.substringAfterLast(inputFilePath,".");
+        String extType = FilenameUtils.getExtension(inputFilePath);
         log.debug("" + extType);
 
         FileInputStream fis = new FileInputStream(inputFilePath);
@@ -39,7 +39,8 @@ public class ExcelToCSV {
             HSSFSheet sheet = wb.getSheetAt(0);
             FormulaEvaluator formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator();
             for (Row row : sheet) {
-                if(row.getRowNum()==0 || row.getRowNum()==1){
+                //to skip headers
+                if(row.getRowNum()==0 || row.getRowNum()==1 || row.getRowNum()==2){
                     continue;
                 }
                 for (Cell cell : row) {
@@ -70,7 +71,9 @@ public class ExcelToCSV {
                 Iterator<Row> rowIterator = sheetx.iterator();
                 while (rowIterator.hasNext()) {
                     Row row = rowIterator.next();
-                    if(row.getRowNum()==0 || row.getRowNum()==1 || row.getRowNum()==2 || row.getRowNum()==3){
+                    //to skip headers
+                    if(row.getRowNum()==0 || row.getRowNum()==1 || row.getRowNum()==2 || row.getRowNum()==3
+                            || row.getRowNum()==4 || row.getRowNum()==5 || row.getRowNum()==6 || row.getRowNum()==7){
                         continue;
                     }
                     Iterator<Cell> cellIterator = row.cellIterator();
@@ -94,6 +97,7 @@ public class ExcelToCSV {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                log.debug("Error in data");
             }
         }
 
@@ -102,6 +106,8 @@ public class ExcelToCSV {
             try {
                 Scanner sc = new Scanner(new File(inputFilePath));
                 sc.useDelimiter(",");
+                //to skip headers
+                sc.nextLine();
                 while (sc.hasNext()) {
                     out.print(sc.next());
                     out.print(',');
@@ -109,6 +115,7 @@ public class ExcelToCSV {
                 sc.close();
             } catch (Exception e) {
                 e.printStackTrace();
+                log.debug("Error in data");
             }
         }
     }
