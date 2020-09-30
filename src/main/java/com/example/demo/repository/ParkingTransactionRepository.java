@@ -7,4 +7,6 @@ import com.example.demo.domain.ParkingTransaction;
 @Repository
 public interface ParkingTransactionRepository extends JpaRepository<ParkingTransaction, Long> {
 
+    ParkingTransaction findByEntrySessionIdAndExitSessionId(Long entrySessionId, Long exitSessionId);
+
 }

@@ -26,14 +26,14 @@ class ExcelreaderApplicationTests {
 //	void contextLoads() {
 //	}
 
-	@Test
-	void readToCSV() throws Exception {
-		assertTrue(etc.readExcel(inputFilePath,outputFilePath));
-	}
-
-	@Test
-	void failReadToCSV() throws Exception {
-		assertFalse(etc.readExcel(inputFilePath,outputFilePath));
-	}
+//	@Test
+//	void readXLStoCSV() throws Exception {
+//		assertTrue(etc.readExcel(inputFilePath,outputFilePath));
+//	}
+//
+//	@Test
+//	void failXLStoCSV() throws Exception {
+//		assertFalse(etc.readExcel(inputFilePath,outputFilePath));
+//	}
 
 }

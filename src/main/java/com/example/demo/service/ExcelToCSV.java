@@ -11,15 +11,17 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.*;
-import java.util.Iterator;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.Scanner;
 
 public class ExcelToCSV {
 
     final Logger log = Logger.getLogger(ExcelToCSV.class.getName());
 
-    public Boolean readExcel(String inputFilePath, String outFilePath) throws Exception {
+    public Boolean readExcel(String inputFilePath, String outputFilePath) throws Exception {
 
 //        String extType = StringUtils.substringAfterLast(inputFilePath,".");
         String extType = FilenameUtils.getExtension(inputFilePath);
@@ -27,16 +29,18 @@ public class ExcelToCSV {
 
         FileInputStream fis = new FileInputStream(inputFilePath);
 
+        Integer fileType = 0;
+
         //required to print xls, xlsx to csv
         DataFormatter formatter = new DataFormatter();
         //print to csv
-        PrintStream out = new PrintStream(new FileOutputStream(outFilePath), true, "UTF-8");
+        PrintStream out = new PrintStream(new FileOutputStream(outputFilePath), true, "UTF-8");
 
         try{
 
             if (!extType.equals("xls") && !extType.equals("xlsx") && !extType.equals("csv")) {
             throw new Exception("Invalid data type");
-            }
+                }
 
             //xls format
             if ("xls".equals(extType)) {
@@ -45,10 +49,14 @@ public class ExcelToCSV {
                 FormulaEvaluator formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator();
                 for (Row row : sheet) {
                     //to skip headers
-                    if (row.getRowNum()<2) {
+                    if (row.getRowNum()<3) {
                         continue;
                     }
                     for (Cell cell : row) {
+                        //to skip column
+                        if(cell.getColumnIndex()<1){
+                            continue;
+                        }
                         switch (formulaEvaluator.evaluateInCell(cell).getCellType()) {
                             case NUMERIC:
 //                            System.out.print(cell.getNumericCellValue() + "\t\t");
@@ -63,7 +71,7 @@ public class ExcelToCSV {
                     }
                     out.println();
                 }
-
+            fileType = 1;
             }
 
             //xlsx format
@@ -108,6 +116,7 @@ public class ExcelToCSV {
 
                 out.println();
                 }
+            fileType = 2;
             }
 
             //csv format
@@ -115,13 +124,18 @@ public class ExcelToCSV {
                 Scanner sc = new Scanner(new File(inputFilePath));
                 sc.useDelimiter(",");
                 //to skip headers
-                sc.nextLine();
+//                sc.nextLine();
                 while (sc.hasNext()) {
                     out.print(sc.next());
                     out.print(',');
                 }
                 sc.close();
+             fileType = 3;
             }
+
+             //Read CSV and save to Parking Transaction table
+             CSVToModel ctm = new CSVToModel();
+             ctm.readXLSCSV(fileType,outputFilePath);
 
         } catch (Exception e) {
             log.debug("Error in data");
