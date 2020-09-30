@@ -1,5 +1,7 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
+import com.example.demo.service.CSVToModelService;
+import com.example.demo.service.ExcelToCSVService;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -10,6 +12,7 @@ import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,10 +20,19 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class ExcelToCSV {
+@Component
+public class ExcelToCSV implements ExcelToCSVService {
 
     final Logger log = Logger.getLogger(ExcelToCSV.class.getName());
 
+    private final CSVToModelService csvToModelService;
+
+    public ExcelToCSV(CSVToModelService csvToModelService) {
+        this.csvToModelService = csvToModelService;
+    }
+
+
+    @Override
     public Boolean readExcel(String inputFilePath, String outputFilePath) throws Exception {
 
 //        String extType = StringUtils.substringAfterLast(inputFilePath,".");
@@ -134,8 +146,7 @@ public class ExcelToCSV {
             }
 
              //Read CSV and save to Parking Transaction table
-             CSVToModel ctm = new CSVToModel();
-             ctm.readXLSCSV(fileType,outputFilePath);
+            csvToModelService.readXLSCSV(fileType,outputFilePath);
 
         } catch (Exception e) {
             log.debug("Error in data");

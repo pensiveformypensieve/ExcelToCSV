@@ -3,10 +3,12 @@ package com.example.demo.domain;
 import com.sun.istack.NotNull;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 import static org.springframework.data.jpa.domain.AbstractAuditable_.createdDate;
@@ -14,7 +16,9 @@ import static org.springframework.data.jpa.domain.AbstractAuditable_.lastModifie
 
 @Entity
 @Table(name = "parking_transaction")
-public class ParkingTransaction {
+public class ParkingTransaction implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +38,6 @@ public class ParkingTransaction {
     @Column(name = "car_park_id", nullable = false)
     private Long carParkId;
 
-    @CreatedDate
     @Column(name = "entry_date_time", nullable = false)
     private ZonedDateTime entryDateTime;
 
@@ -65,7 +68,6 @@ public class ParkingTransaction {
     @Column(name = "duration", nullable = true)
     private Integer duration;
 
-    @CreatedBy
     @Size(max = 50)
     @Column(name = "driver_code", length = 50, nullable = true)
     private String driverCode;
@@ -88,6 +90,26 @@ public class ParkingTransaction {
 
     @Column(name = "modified_details", nullable = true)
     private String modifiedDetails;
+
+    @CreatedBy
+    @Column(name = "created_by", nullable = false, length = 50, updatable = false)
+
+    private String createdBy;
+
+    @CreatedDate
+    @Column(name = "created_date", nullable = false)
+
+    private ZonedDateTime createdDate = ZonedDateTime.now();
+
+    @LastModifiedBy
+    @Column(name = "last_modified_by", length = 50)
+
+    private String lastModifiedBy;
+
+    @LastModifiedDate
+    @Column(name = "last_modified_date")
+
+    private ZonedDateTime lastModifiedDate = ZonedDateTime.now();
 
     public Long getId() {
         return id;
@@ -249,31 +271,65 @@ public class ParkingTransaction {
         this.modifiedDetails = modifiedDetails;
     }
 
-    @Override
-    public String toString() {
-        return "ParkingTransaction [id=" + id
-                + ", carPlateNo=" + carPlateNo
-                + ", carParkId=" + carParkId
-                + ", vehicleType=" + vehicleType
-                + ", entryDateTime=" + entryDateTime
-                + ", exitDateTime=" + exitDateTime
-                + ", allowOpen=" + allowOpen
-                + ", entry=" + entry
-                + ", entrySessionId=" + entrySessionId
-                + ", exitSessionId=" + exitSessionId
-                + ", paymentAmount=" + paymentAmount
-                + ", tranAmount=" + tranAmount
-                + ", duration=" + duration
-                + ", driverCode=" + driverCode
-                + ", lastModifiedDate=" + lastModifiedDate
-                + ", createdDate=" + createdDate
-                + ", transaction_id=" + transactionId
-                + ", parking_type_id=" + parkingTypeId
-                + ", notificationToken=" + notificationToken
-                + ", status=" + status
-                + ", remarks=" + remarks
-                + ", modifiedDetails=" + modifiedDetails
-                + "]";
+    public String getCreatedBy() {
+        return createdBy;
     }
 
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public ZonedDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(ZonedDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public ZonedDateTime getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(ZonedDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    @Override
+    public String toString() {
+        return "ParkingTransaction{" +
+                "id=" + id +
+                ", carPlateNo='" + carPlateNo + '\'' +
+                ", vehicleType='" + vehicleType + '\'' +
+                ", carParkId=" + carParkId +
+                ", entryDateTime=" + entryDateTime +
+                ", exitDateTime=" + exitDateTime +
+                ", allowOpen=" + allowOpen +
+                ", entry=" + entry +
+                ", entrySessionId='" + entrySessionId + '\'' +
+                ", exitSessionId='" + exitSessionId + '\'' +
+                ", paymentAmount=" + paymentAmount +
+                ", tranAmount=" + tranAmount +
+                ", duration=" + duration +
+                ", driverCode='" + driverCode + '\'' +
+                ", parkingTypeId=" + parkingTypeId +
+                ", transactionId=" + transactionId +
+                ", notificationToken='" + notificationToken + '\'' +
+                ", status=" + status +
+                ", remarks='" + remarks + '\'' +
+                ", modifiedDetails='" + modifiedDetails + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", createdDate=" + createdDate +
+                ", lastModifiedBy='" + lastModifiedBy + '\'' +
+                ", lastModifiedDate=" + lastModifiedDate +
+                '}';
+    }
 }

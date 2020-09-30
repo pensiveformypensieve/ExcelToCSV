@@ -1,19 +1,16 @@
 package com.example.demo;
 
-import com.example.demo.service.ExcelToCSV;
-import org.junit.jupiter.api.Test;
+import com.example.demo.service.ExcelToCSVService;
+import com.example.demo.service.impl.ExcelToCSV;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 class ExcelreaderApplicationTests {
 
-
-	ExcelToCSV etc = new ExcelToCSV();
+	ExcelToCSVService etcs;
 	//		String inputFilePath = "C:\\Users\\fiona\\Desktop\\ST\\dashboard\\W7_Movement Report.xls";
 //	String inputFilePath = "C:\\Users\\fiona\\Desktop\\ST\\dashboard\\TW2.xlsx";
 			String inputFilePath = "C:\\Users\\fiona\\Desktop\\ST\\dashboard\\TW2 - Copy.xl";
