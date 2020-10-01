@@ -7,6 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface CSVToModelService {
 
-    Boolean readXLSCSV(Integer fileType, String inputFilePath) throws Exception;
+    Boolean readCSV(Integer fileType, String inputFilePath) throws Exception;
 
 }

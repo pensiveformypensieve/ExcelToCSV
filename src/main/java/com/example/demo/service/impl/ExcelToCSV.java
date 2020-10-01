@@ -31,7 +31,6 @@ public class ExcelToCSV implements ExcelToCSVService {
         this.csvToModelService = csvToModelService;
     }
 
-
     @Override
     public Boolean readExcel(String inputFilePath, String outputFilePath) throws Exception {
 
@@ -105,6 +104,9 @@ public class ExcelToCSV implements ExcelToCSVService {
 
                         //to enable blank cells to be printed in switch case
                         Cell cell = row.getCell(cn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                        if(cell.getColumnIndex()<1){
+                            continue;
+                        }
                         switch (cell.getCellType()) {
                             case STRING:
 //                                System.out.print(cell.getStringCellValue() + "\t\t\t");
@@ -146,7 +148,7 @@ public class ExcelToCSV implements ExcelToCSVService {
             }
 
              //Read CSV and save to Parking Transaction table
-            csvToModelService.readXLSCSV(fileType,outputFilePath);
+            csvToModelService.readCSV(fileType,outputFilePath);
 
         } catch (Exception e) {
             log.debug("Error in data");

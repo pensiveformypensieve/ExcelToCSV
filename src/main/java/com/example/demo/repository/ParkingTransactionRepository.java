@@ -7,9 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 @Repository
 public interface ParkingTransactionRepository extends JpaRepository<ParkingTransaction, Long> {
 
-    ParkingTransaction findByEntrySessionIdAndExitSessionId(Long entrySessionId, Long exitSessionId);
+    List<ParkingTransaction> findByEntrySessionIdAndExitSessionId(String entrySessionId, String exitSessionId);
 
 }
