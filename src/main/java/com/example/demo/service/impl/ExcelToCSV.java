@@ -138,7 +138,7 @@ public class ExcelToCSV implements ExcelToCSVService {
                 Scanner sc = new Scanner(new File(inputFilePath));
                 sc.useDelimiter(",");
                 //to skip headers
-//                sc.nextLine();
+                sc.nextLine();
                 while (sc.hasNext()) {
                     out.print(sc.next());
                     out.print(',');

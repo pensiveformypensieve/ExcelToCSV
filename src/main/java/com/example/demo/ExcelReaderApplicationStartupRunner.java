@@ -22,12 +22,11 @@ public class ExcelReaderApplicationStartupRunner implements CommandLineRunner {
     @Override
     public void run (String...args) throws Exception{
 
-//        		String inputFilePath = "C:\\Users\\fiona\\Desktop\\ST\\dashboard\\W7_Movement Report_test.xls";
-////		String inputFilePath = "C:\\Users\\fiona\\Desktop\\ST\\dashboard\\report29092020084354.csv";
-		String inputFilePath = "C:\\Users\\fiona\\Desktop\\ST\\dashboard\\TW2_test.xlsx";
+        		String inputFilePath = "C:\\Users\\fiona\\Desktop\\ST\\dashboard\\W7_Movement Report.xls";
+//		String inputFilePath = "C:\\Users\\fiona\\Desktop\\ST\\dashboard\\TW2.xlsx";
 ////		String inputFilePath = "C:\\Users\\fiona\\Desktop\\ST\\dashboard\\TW2 - Copy.xl";
-////		String inputFilePath = "C:\\Users\\fiona\\Desktop\\ST\\dashboard\\MoveTrans_10_Raeburn_Park_01082020_31082020_15092020 for ST.csv";
-//
+//		String inputFilePath = "C:\\Users\\fiona\\Desktop\\ST\\dashboard\\MoveTrans_10_Raeburn_Park_01082020_31082020_15092020 for ST.csv";
+
 		String date = DateTimeFormatter.ofPattern("ddMMyyyyhhmmss").format(ZonedDateTime.now());
 		//to not reuse the same file name and get error when file is still opened
 		String outputFileName = "report" + date + ".csv";
@@ -35,9 +34,5 @@ public class ExcelReaderApplicationStartupRunner implements CommandLineRunner {
 		log.debug(""+outputFilePath);
 //
 		excelToCSVService.readExcel(inputFilePath, outputFilePath);
-
-//		CSVToModel test = new CSVToModel();
-//		test.readXLSCSV(1,inputFilePath);
-
     }
 }

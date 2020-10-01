@@ -107,7 +107,7 @@ public class XLSXdto {
 
     @Override
     public String toString() {
-        return "XLSdto{" +
+        return "XLSXdto{" +
                 "iuNo='" + iuNo + '\'' +
                 ", type='" + type + '\'' +
                 ", holder='" + holder + '\'' +
